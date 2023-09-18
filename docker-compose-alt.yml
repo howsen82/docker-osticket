@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  osticket:
+    container_name: osticket
+    image: devinsolutions/osticket:latest
+    environment:
+      CONTAINER_NAME: osticket
+      MYSQL_USER: some_user
+      MYSQL_PASSWORD: some_password
+      MYSQL_DATABASE: my_database_name
+      MYSQL_HOST: mariadb
+      INSTALL_SECRET: MariushostingMariushostingMari13
+      INSTALL_EMAIL: info@instar.de
+      # INSTALL_URL: https://192.168.41.131
+      INSTALL_NAME: Marius Helpdesk
+      ADMIN_USERNAME: marius
+      ADMIN_PASSWORD: mariushosting
+      ADMIN_FIRSTNAME: Marius
+      ADMIN_LASTNAME: Lixandru
+      ADMIN_EMAIL: yourown@email
+      CRON_INTERVAL: 1
+      SMTP_USER: Your-own-gmail-address
+      SMTP_PASSWORD: Your-own-app-password
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_FROM: Your-own-gmail-address
+      SMTP_TLS: 1
+    ports:
+      - 8080:80
+      - 7777:7777
+      - 9001:9000
+    restart: unless-stopped
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    image: mariadb:jammy
+    container_name: mariadb
+    hostname: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_USER=some_user
+      - MYSQL_PASSWORD=some_password
+      - MYSQL_DATABASE=my_database_name
+    # security_opt:
+    #   - no-new-privileges:true
+    #   - seccomp:unconfined
+    #   - apparmor:unconfined
+    volumes:
+      - /data/mariadb/osticket:/var/lib/mysql:rw
+    restart: unless-stopped
